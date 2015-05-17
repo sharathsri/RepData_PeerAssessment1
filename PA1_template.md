@@ -7,7 +7,8 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 library(dplyr)
 library(xtable)
 library(lattice)
@@ -47,18 +48,23 @@ q4<-mutate(q4, wavg = mean(steps))
 ```
 # What is mean total number of steps taken per day?
 ## Histogram of total steps taken per day
-```{r}
+
+```r
 hist(plot1$tspm,xlab="Total steps per day", main="Frequency of steps per day")
 ```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
 ## Report of mean and median of total steps per day
-```{r}
+
+```r
 mn<-mean(plot1$tspm)
 md<-median(plot1$tspm)
 ```
-MEAN   ::: `r mn`  
-MEDIAN ::: `r md`
+MEAN   ::: 1.0766189 &times; 10<sup>4</sup>  
+MEDIAN ::: 10765
 # What is the average daily activity pattern?
-```{r}
+
+```r
 plot2<-unique(q2[ ,c(3,4)])
 plot(plot2$interval,plot2$avg, type="l", xlab="5 minute intervals", ylab="Average in intervals across all days", main="Average across intervals on all days", col="green")
 m<-max(plot2[ ,2])
@@ -69,38 +75,56 @@ mt<-paste(mt,collapse="")
 text(mp$interval,mp$avg,mt,cex=.8)
 ```
 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+
 # Imputing missing values
 ## Total number of missing values
-```{r, results="asis"}
+
+```r
 t<-data.frame(nrow(filter(data, is.na(interval) | is.na(date) | is.na(steps))))
 names(t)<-c("Number of rows with missing values")
 print(xtable(t), type="html", include.rownames=FALSE)
 ```
+
+<table border=1>
+<tr> <th> Number of rows with missing values </th>  </tr>
+  <tr> <td align="right"> 2304 </td> </tr>
+   </table>
 ## (Imputed values) Histogram of the total number of steps taken each day
 ### Imputing value 0. There are no steps recorded for whole days of missing values.
-```{r}
+
+```r
 plot3<-unique(q3[ ,c(2,4)])
 hist(plot3$imp_tspm,xlab="Total steps per day", main="Frequency of steps per day")
 ```
-```{r}
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+
+```r
 mn_imp<-mean(plot3$imp_tspm)
 md_imp<-median(plot3$imp_tspm)
 ```
-MEAN   ::: `r mn_imp`  
-MEDIAN ::: `r md_imp`
+MEAN   ::: 9354.2295082  
+MEDIAN ::: 1.0395 &times; 10<sup>4</sup>
 
 ## Differences in mean and median before and after imputation
 ### Mean and Median have decreased after imputation
-Mean Diff ::: `r (mn - mn_imp)`  
-Median Diff ::: `r (md - md_imp)`
+Mean Diff ::: 1411.959171  
+Median Diff ::: 370
 ## Density spread before and after imputation
-```{r}
+
+```r
 plot(density(plot1$tspm), type="l", col="red", lwd=2.5, xlab="Total steps per day", main="Density plot of total steps per day")
 lines(density(plot3$imp_tspm), type="l", col="green", lwd=2.5)
 legend("topright", c("Before Imputation","After imputation"),lty=c(1,1),lwd=c(2.5,2.5),col=c("red","green"))
 ```
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 plot4<-unique(q4[ ,c(3,4,5)])
 xyplot(wavg ~ interval | wDay, data = plot4, layout = c(1, 2), type="l", xlab="5 minute intervals in a day", ylab="Average steps")
 ```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
